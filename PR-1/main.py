@@ -1,7 +1,7 @@
 # main Python V 3.13.0
 
-def sum_range(start, end):
 
+def sum_range(start, end):
     if start > end:
         start, end = end, start
 
@@ -18,18 +18,12 @@ def sum_range(start, end):
 
 
 def three_args(*, var1=None, var2=None, var3=None):
-    args = {
-        "var1": var1,
-        "var2": var2,
-        "var3": var3
-    }
+    args = {"var1": var1, "var2": var2, "var3": var3}
 
-    filtered_args = {key: value for key,
-                     value in args.items() if value is not None}
+    filtered_args = {key: value for key, value in args.items() if value is not None}
 
     if filtered_args:
-        result = ", ".join(f"{key} = {value}" for key,
-                           value in filtered_args.items())
+        result = ", ".join(f"{key} = {value}" for key, value in filtered_args.items())
         print(f"Переданы аргументы: {result}")
 
 
@@ -39,7 +33,7 @@ def middle_letter(word):
     if length % 2 == 1:
         return word[length // 2]
     else:
-        return word[length // 2 - 1: length // 2 + 1]
+        return word[length // 2 - 1 : length // 2 + 1]
 
 
 def calculate(a: int, b: int) -> int:
@@ -63,10 +57,10 @@ if __name__ == "__main__":
     print(sum_range(1, 8))
     print(sum_range(8, 1))
     three_args(var1=21)
-    three_args(var1='Python', var3=3)
-    three_args(var1='Python', var2=3, var3=9)
-    print(middle_letter('test'))
-    print(middle_letter('testing'))
+    three_args(var1="Python", var3=3)
+    three_args(var1="Python", var2=3, var3=9)
+    print(middle_letter("test"))
+    print(middle_letter("testing"))
     print(calculate(20, 50))
     print(calculate(10, 30))
     print(process_number(6))

@@ -3,31 +3,30 @@ import numpy as np
 # Исходные данные
 
 # Создаём структурированный массив для документов
-document_dtype = np.dtype([
-    ('type', 'U20'),
-    ('number', 'U20'),
-    ('name', 'U50')
-])
+document_dtype = np.dtype([("type", "U20"), ("number", "U20"), ("name", "U50")])
 
-documents = np.array([
-    ('passport', '2207 876234', 'Василий Гупкин'),
-    ('invoice', '11-2', 'Геннадий Покемонов'),
-    ('insurance', '10006', 'Аристарх Павлов')
-], dtype=document_dtype)
+documents = np.array(
+    [
+        ("passport", "2207 876234", "Василий Гупкин"),
+        ("invoice", "11-2", "Геннадий Покемонов"),
+        ("insurance", "10006", "Аристарх Павлов"),
+    ],
+    dtype=document_dtype,
+)
 
 # Создаём словарь полок, где каждая полка содержит массив номеров документов
 directories = {
-    '1': np.array(['2207 876234', '11-2']),
-    '2': np.array(['10006']),
-    '3': np.array([], dtype='U20')
+    "1": np.array(["2207 876234", "11-2"]),
+    "2": np.array(["10006"]),
+    "3": np.array([], dtype="U20"),
 }
 
 
 def get_owner_by_number(number):
     """Возвращает владельца документа по его номеру."""
-    matches = documents[documents['number'] == number]
+    matches = documents[documents["number"] == number]
     if matches.size > 0:
-        return matches['name'][0]
+        return matches["name"][0]
     return None
 
 
@@ -42,34 +41,32 @@ def get_shelf_by_number(number):
 def list_all_documents():
     """Выводит информацию по всем документам."""
     for doc in documents:
-        shelf = get_shelf_by_number(doc['number'])
-        print(f"№: {doc['number']}, тип: {doc['type']}, владелец: {
-              doc['name']}, полка хранения: {shelf}")
+        shelf = get_shelf_by_number(doc["number"])
+        print(f"№: {doc['number']}, тип: {doc['type']}, владелец: {doc['name']}, полка хранения: {shelf}")
 
 
 def add_shelf(shelf_number):
     """Добавляет новую полку, если её ещё нет."""
     if shelf_number in directories:
-        print(f"Такая полка уже существует. Текущий перечень полок: {
-              ', '.join(sorted(directories.keys()))}.")
+        print(f"Такая полка уже существует. Текущий перечень полок: {', '.join(sorted(directories.keys()))}.")
     else:
-        directories[shelf_number] = np.array([], dtype='U20')
-        print(f"Полка добавлена. Текущий перечень полок: {
-              ', '.join(sorted(directories.keys()))}.")
+        directories[shelf_number] = np.array([], dtype="U20")
+        print(f"Полка добавлена. Текущий перечень полок: {', '.join(sorted(directories.keys()))}.")
 
 
 def delete_shelf(shelf_number):
     """Удаляет полку, если она пуста."""
     if shelf_number not in directories:
-        print(f"Такой полки не существует. Текущий перечень полок: {
-              ', '.join(sorted(directories.keys()))}.")
+        print(f"Такой полки не существует. Текущий перечень полок: {', '.join(sorted(directories.keys()))}.")
     elif directories[shelf_number].size > 0:
-        print(f"На полке есть документы, удалите их перед удалением полки. Текущий перечень полок: {
-              ', '.join(sorted(directories.keys()))}.")
+        print(
+            f"На полке есть документы, удалите их перед удалением полки. Текущий перечень полок: {
+                ', '.join(sorted(directories.keys()))
+            }."
+        )
     else:
         del directories[shelf_number]
-        print(f"Полка удалена. Текущий перечень полок: {
-              ', '.join(sorted(directories.keys()))}.")
+        print(f"Полка удалена. Текущий перечень полок: {', '.join(sorted(directories.keys()))}.")
 
 
 def add_document(doc_number, doc_type, doc_owner, shelf_number):
@@ -79,16 +76,14 @@ def add_document(doc_number, doc_type, doc_owner, shelf_number):
         print("Такой полки не существует. Добавьте полку командой ads.")
         return
     # Проверка на уникальность номера документа
-    if np.any(documents['number'] == doc_number):
+    if np.any(documents["number"] == doc_number):
         print("Документ с таким номером уже существует.")
         return
     # Создание нового документа
-    new_doc = np.array([(doc_type, doc_number, doc_owner)],
-                       dtype=document_dtype)
+    new_doc = np.array([(doc_type, doc_number, doc_owner)], dtype=document_dtype)
     documents = np.concatenate((documents, new_doc))
     # Добавление номера документа на полку
-    directories[shelf_number] = np.append(
-        directories[shelf_number], doc_number)
+    directories[shelf_number] = np.append(directories[shelf_number], doc_number)
     print("Документ добавлен. Текущий список документов:")
     list_all_documents()
 
@@ -96,7 +91,7 @@ def add_document(doc_number, doc_type, doc_owner, shelf_number):
 def delete_document(doc_number):
     """Удаляет документ из базы и с полки."""
     global documents
-    index = np.where(documents['number'] == doc_number)[0]
+    index = np.where(documents["number"] == doc_number)[0]
     if index.size == 0:
         print("Документ не найден в базе.")
     else:
@@ -119,14 +114,12 @@ def move_document(doc_number, target_shelf):
         print("Документ не найден в базе.")
         return
     if target_shelf not in directories:
-        print(f"Такой полки не существует. Текущий перечень полок: {
-              ', '.join(sorted(directories.keys()))}.")
+        print(f"Такой полки не существует. Текущий перечень полок: {', '.join(sorted(directories.keys()))}.")
         return
     # Удаление документа с текущей полки
     directories[current_shelf] = directories[current_shelf][directories[current_shelf] != doc_number]
     # Добавление документа на целевую полку
-    directories[target_shelf] = np.append(
-        directories[target_shelf], doc_number)
+    directories[target_shelf] = np.append(directories[target_shelf], doc_number)
     print("Документ перемещен.")
     print("Текущий список документов:")
     list_all_documents()
@@ -136,43 +129,43 @@ def main():
     """Основной цикл программы."""
     while True:
         command = input("Введите команду: ").strip().lower()
-        if command == 'q':
+        if command == "q":
             print("Программа завершена.")
             break
-        elif command == 'p':
+        elif command == "p":
             number = input("Введите номер документа: ").strip()
             owner = get_owner_by_number(number)
             if owner:
                 print(f"Владелец документа: {owner}")
             else:
                 print("Документ не найден в базе.")
-        elif command == 's':
+        elif command == "s":
             number = input("Введите номер документа: ").strip()
             shelf = get_shelf_by_number(number)
             if shelf:
                 print(f"Документ хранится на полке: {shelf}")
             else:
                 print("Документ не найден в базе.")
-        elif command == 'l':
+        elif command == "l":
             print("Результат:")
             list_all_documents()
-        elif command == 'ads':
+        elif command == "ads":
             shelf_number = input("Введите номер полки: ").strip()
             add_shelf(shelf_number)
-        elif command == 'ds':
+        elif command == "ds":
             shelf_number = input("Введите номер полки: ").strip()
             delete_shelf(shelf_number)
         # Задание 2
-        elif command == 'ad':
+        elif command == "ad":
             doc_number = input("Введите номер документа: ").strip()
             doc_type = input("Введите тип документа: ").strip()
             doc_owner = input("Введите владельца документа: ").strip()
             shelf_number = input("Введите полку для хранения: ").strip()
             add_document(doc_number, doc_type, doc_owner, shelf_number)
-        elif command == 'd':
+        elif command == "d":
             doc_number = input("Введите номер документа: ").strip()
             delete_document(doc_number)
-        elif command == 'm':
+        elif command == "m":
             doc_number = input("Введите номер документа: ").strip()
             target_shelf = input("Введите номер полки: ").strip()
             move_document(doc_number, target_shelf)
